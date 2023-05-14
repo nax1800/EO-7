@@ -29,6 +29,17 @@ Why am I doing this? No idea just love 1.8 and I was bored.
 
 ***NOTE: I WILL TRY MY BEST TO MAKE IT THE BEST I CAN.***
 
+**TODO:**
+<br/>
+[+] Clean Code (100%),
+<br/>
+[+] In-Game Menu,
+<br/>
+[?] Universal,
+<br/>
+[?] Multiplayer
+
+
 **Resources:**
 <br>
 [+] Minhook,
