@@ -1,5 +1,5 @@
 # EO-7
-Open Source DLL For 1.8. (Single-Player)
+Open Source DLL For Fortnite 1.8. (Single-Player)
 
 Why am I doing this? No idea just love 1.8 and I was bored.
 
