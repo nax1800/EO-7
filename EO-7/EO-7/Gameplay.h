@@ -59,7 +59,7 @@ namespace Gameplay
 
 		if (FunctionName == Functions::PlayButton)
 		{
-			(*Globals::GWorld)->OwningGameInstance->LocalPlayers[0]->PlayerController->SwitchLevel(L"Athena_Terrain");
+			Globals::Controller->SwitchLevel(L"Athena_Terrain");
 		}
 
 		if (FunctionName == Functions::StartMatch)
