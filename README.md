@@ -3,6 +3,9 @@ Open Source DLL For 1.8. (Single-Player)
 
 Why am I doing this? No idea just love 1.8 and I was bored.
 
+
+***NEEDS TESTING.***
+
 **Game Features:**
 <br>
 [+] Looting (Floor Loot, Chests),
