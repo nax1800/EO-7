@@ -1,5 +1,17 @@
 #pragma once
 
-#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
-// Windows Header Files
-#include <windows.h>
+#include <Windows.h>
+#include <psapi.h>
+#include <iostream>
+#include <Detours.h>
+
+#define uint uintptr_t
+#define ProcessAttach DLL_PROCESS_ATTACH
+
+#include "SDK.hpp"
+
+#include "Logging.h"
+#include "Utils.h"
+#include "Globals.h"
+#include "Gameplay.h"
+

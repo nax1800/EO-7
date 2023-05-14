@@ -23,11 +23,14 @@ typedef unsigned __int16 uint16;
 typedef unsigned __int32 uint32;
 typedef unsigned __int64 uint64;
 
+inline void* (*ProcessEvent)(void*, void*, void*);
+
 namespace Offsets
 {
-	inline int32 GObjects          = 0x0678E010;
-	inline int32 AppendString      = 0x01337530;
-	inline int32 ProcessEvent      = 0x01427390;
+	inline int32 GObjects = 0x0678E010;
+	inline int32 AppendString = 0x01337530;
+	inline int32 ProcessEvent = 0x01427390;
+	inline int32 GWorld = 0x068799f0; //Not sure if GWorld Offset.
 }
 
 #include "PropertyFixup.hpp"
@@ -5077,3 +5080,9 @@ namespace Offsets
 #include "SDK/Frontend_Lobby_parameters.hpp"
 #include "SDK/BP_TRV_CAS_Alight_Lighting_Official_parameters.hpp"
 #include "SDK/BP_TRV_Candle_01_parameters.hpp"
+
+inline void Initialize()
+{
+	SDK::UObject::GObjects = reinterpret_cast<SDK::TUObjectArray*>((uintptr_t)GetModuleHandle(0) + Offsets::GObjects);
+	ProcessEvent = decltype(ProcessEvent)((uintptr_t)GetModuleHandle(0) + Offsets::ProcessEvent);
+}
