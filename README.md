@@ -1,7 +1,10 @@
 # EO-7
-Open Source DLL For 1.8. (Single-Player)
+Open Source DLL For Fortnite 1.8. (Single-Player)
 
 Why am I doing this? No idea just love 1.8 and I was bored.
+
+
+***NEEDS TESTING.***
 
 **Game Features:**
 <br>
@@ -28,6 +31,17 @@ Why am I doing this? No idea just love 1.8 and I was bored.
 [+] Edit World (Add/Delete Actors)
 
 ***NOTE: I WILL TRY MY BEST TO MAKE IT THE BEST I CAN.***
+
+**TODO:**
+<br/>
+[+] Clean Code (100%),
+<br/>
+[+] In-Game Menu,
+<br/>
+[?] Universal,
+<br/>
+[?] Multiplayer
+
 
 **Resources:**
 <br>
