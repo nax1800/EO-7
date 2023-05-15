@@ -7,6 +7,8 @@ namespace Globals
 	SDK::AFortPlayerPawnAthena* Pawn;
 	SDK::AFortPlayerControllerAthena* Controller;
 	SDK::UGameplayStatics* GameplayStatics;
+	SDK::AFortQuickBars* Quickbars;
+	SDK::AFortInventory* Inventory;
 
 	void Initialize()
 	{

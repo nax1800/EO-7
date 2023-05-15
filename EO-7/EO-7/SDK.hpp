@@ -24,12 +24,15 @@ typedef unsigned __int32 uint32;
 typedef unsigned __int64 uint64;
 
 inline void* (*ProcessEvent)(void*, void*, void*);
+inline void* (*Realloc)(void* Memory, int64_t NewSize, uint32_t Alignment);
+
 
 namespace Offsets
 {
 	inline int32 GObjects = 0x0678E010;
 	inline int32 AppendString = 0x01337530;
 	inline int32 ProcessEvent = 0x01427390;
+	inline int32 Realloc = 0x0128C650;
 	inline int32 GWorld = 0x068799f0; //Not sure if GWorld Offset.
 }
 
@@ -5085,4 +5088,5 @@ inline void Initialize()
 {
 	SDK::UObject::GObjects = reinterpret_cast<SDK::TUObjectArray*>((uintptr_t)GetModuleHandle(0) + Offsets::GObjects);
 	ProcessEvent = decltype(ProcessEvent)((uintptr_t)GetModuleHandle(0) + Offsets::ProcessEvent);
+	Realloc = decltype(Realloc)((uintptr_t)GetModuleHandle(0) + Offsets::Realloc);
 }

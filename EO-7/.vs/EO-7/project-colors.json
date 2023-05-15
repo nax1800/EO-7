@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "feedfde3-f152-4bfc-8954-2fbf3eb94f1f": {
+      "ProjectGuid": "feedfde3-f152-4bfc-8954-2fbf3eb94f1f",
+      "DisplayName": "EO-7",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}

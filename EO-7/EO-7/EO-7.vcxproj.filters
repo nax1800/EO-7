@@ -12,6 +12,9 @@
     <ClInclude Include="Logging.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Gameplay.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Helpers.h" />
+    <ClInclude Include="Inventory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />

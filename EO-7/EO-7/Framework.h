@@ -13,5 +13,8 @@
 #include "Logging.h"
 #include "Utils.h"
 #include "Globals.h"
+#include "Helpers.h"
+#include "Player.h"
+#include "Inventory.h"
 #include "Gameplay.h"
 

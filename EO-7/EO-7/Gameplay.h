@@ -9,49 +9,20 @@ namespace Functions
 	std::string LoadingScreenDropped = "Function FortniteGame.FortPlayerController.ServerLoadingScreenDropped";
 	std::string AircraftJump = "Function FortniteGame.FortPlayerControllerAthena.ServerAttemptAircraftJump";
 	std::string AircraftExitedZone = "";
-	std::string ExecuteInventoryItem = "";
+	std::string ExecuteInventoryItem = "Function FortniteGame.FortPlayerController.ClientExecuteInventoryItem";
 	std::string AttemptInteract = "";
 	std::string HandlePickup = "";
 	std::string TryActivateAbility = "";
 	std::string AbilityRPCBatch = "";
 	std::string PawnDied = "";
-}
-
-namespace Classes
-{
-	SDK::UClass* PlayerPawn_Athena_C;
+	std::string ReceiveTick = "Function Engine.Actor.ReceiveTick";
+	std::string ReturnToMainMenu = "Function FortniteGame.FortPlayerController.ServerReturnToMainMenu";
 }
 
 namespace Gameplay
 {
-	//TEMP
-	template<typename T>
-	T* SpawnActor(SDK::UClass* ActorClass, SDK::FVector Location, SDK::FRotator Rotation) {
-		SDK::FQuat Quat;
-		SDK::FTransform Transform;
-		Quat.W = 0;
-		Quat.X = Rotation.Pitch;
-		Quat.Y = Rotation.Roll;
-		Quat.Z = Rotation.Yaw;
 
-		Transform.Rotation = Quat;
-		Transform.Scale3D = SDK::FVector{ 1,1,1 };
-		Transform.Translation = Location;
-
-		auto GameplayStatics = ((SDK::UGameplayStatics*)SDK::UGameplayStatics::StaticClass()->DefaultObject);
-
-		auto Actor = GameplayStatics->BeginSpawningActorFromClass((*Globals::GWorld), ActorClass, Transform, false, nullptr);
-		GameplayStatics->FinishSpawningActor(Actor, Transform);
-		return static_cast<T*>(Actor);
-	}
-
-	SDK::AActor* FindActor(SDK::UClass* ActorClass, int index = 0)
-	{
-		SDK::TArray<SDK::AActor*> Actors;
-		Globals::GameplayStatics->GetAllActorsOfClass((*Globals::GWorld), ActorClass, &Actors);
-		return Actors[index];
-	}
-	//TEMP
+	bool bMatchStarted = false;
 
 	void* ProcessEventHook(SDK::UObject* Object, SDK::UFunction* Function, void* Parameters)
 	{
@@ -65,30 +36,67 @@ namespace Gameplay
 		if (FunctionName == Functions::StartMatch)
 		{
 			Globals::Controller = reinterpret_cast<SDK::AFortPlayerControllerAthena*>((*Globals::GWorld)->OwningGameInstance->LocalPlayers[0]->PlayerController);
-			Classes::PlayerPawn_Athena_C = SDK::UObject::FindClass("BlueprintGeneratedClass PlayerPawn_Athena.PlayerPawn_Athena_C");
+			auto PlayerState = static_cast<SDK::AFortPlayerStateAthena*>(Globals::Controller->PlayerState);
+			PlayerState->TeamIndex = SDK::EFortTeam::HumanPvP_Team1;
+			PlayerState->OnRep_TeamIndex();
 
-			Globals::Pawn = SpawnActor<SDK::AFortPlayerPawnAthena>(Classes::PlayerPawn_Athena_C, { -127500, -110500, +4000 }, {});
-			Globals::Controller->Possess(Globals::Pawn);
+			Player::Spawn();
 
-			Logging::Log(Globals::Pawn->GetFullName());
+			Inventory::Setup();
 
 			reinterpret_cast<SDK::AFortPlayerController*>((*Globals::GWorld)->OwningGameInstance->LocalPlayers[0]->PlayerController)->ServerReadyToStartMatch();
 			reinterpret_cast<SDK::AFortGameMode*>((*Globals::GWorld)->AuthorityGameMode)->StartMatch();
+			bMatchStarted = true;
 		}
 
-		if (FunctionName == Functions::LoadingScreenDropped)
+		if (FunctionName == Functions::LoadingScreenDropped && bMatchStarted)
 		{
-
+			Globals::Controller->bHasClientFinishedLoading = true;
+			Globals::Controller->bHasServerFinishedLoading = true;
+			Globals::Controller->OnRep_bHasServerFinishedLoading();
+			Globals::Controller->ServerSetClientHasFinishedLoading(true);
 		}
 
 		if (FunctionName == Functions::AircraftJump || FunctionName == Functions::AircraftExitedZone)
 		{
-			auto Aircraft = FindActor(SDK::AFortAthenaAircraft::StaticClass());
+			auto Aircraft = Helpers::FindActor(SDK::AFortAthenaAircraft::StaticClass());
 			if (Globals::Controller->IsInAircraft())
 			{
-				Globals::Pawn = SpawnActor<SDK::AFortPlayerPawnAthena>(Classes::PlayerPawn_Athena_C, Aircraft->K2_GetActorLocation(), {});
-				Globals::Controller->Possess(Globals::Pawn);
+				Player::Spawn(Aircraft->K2_GetActorLocation());
 			}
+		}
+
+		if (FunctionName == Functions::ExecuteInventoryItem)
+		{
+			auto Params = (SDK::Params::AFortPlayerController_ServerExecuteInventoryItem_Params*)Parameters;
+			auto ItemGuid = Params->ItemGuid;
+			auto ItemInstances = Globals::Inventory->Inventory.ItemInstances;
+
+			for (int i = 0; i < ItemInstances.Num(); i++)
+			{
+				auto ItemInstance = ItemInstances[i];
+				auto ItemDefinition = (SDK::UFortWeaponItemDefinition*)ItemInstance->GetItemDefinitionBP();
+				auto ItemGuidB = ItemInstance->GetItemGuid();
+
+				if (Helpers::AreGuidsEqual(ItemGuid, ItemGuidB))
+				{
+					Globals::Pawn->EquipWeaponDefinition(ItemDefinition, ItemGuid);
+				}
+			}
+		}
+
+		if (FunctionName == Functions::ReceiveTick && bMatchStarted)
+		{
+			if (GetAsyncKeyState(VK_SPACE) && 0x8000 && Globals::Pawn->CanJump() && !Globals::Pawn->IsJumpProvidingForce() && Globals::Pawn) //TEMP : Need Abilities
+				Globals::Pawn->Jump();
+
+			Globals::Pawn->CurrentMovementStyle = SDK::EFortMovementStyle::Sprinting;
+		}
+
+		if (FunctionName == Functions::ReturnToMainMenu && bMatchStarted)
+		{
+			bMatchStarted = false;
+			Globals::Controller->SwitchLevel(L"Frontend");
 		}
 
 		return ProcessEvent(Object, Function, Parameters);
