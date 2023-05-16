@@ -45,6 +45,23 @@ namespace Inventory
 		auto Pickaxe = SDK::UObject::FindObject<SDK::UFortWeaponItemDefinition>("FortWeaponMeleeItemDefinition WID_Harvest_Pickaxe_Athena_C_T01.WID_Harvest_Pickaxe_Athena_C_T01");
 		AddItem(Pickaxe, SDK::EFortQuickBars::Primary, 0);
 
+		bool bFoundRandomItem = false;
+		int Items = 1;
+		for (int i = 0; i < SDK::UObject::GObjects->Num(); i++)
+		{
+			auto Object = SDK::UObject::GObjects->GetByIndex(i);
+
+			if (Object && Object->GetFullName().contains("FortWeaponRangedItemDefinition ") && !bFoundRandomItem)
+			{
+				Items++;
+				auto Item = static_cast<SDK::UFortWeaponItemDefinition*>(Object);
+				AddItem(Item, SDK::EFortQuickBars::Primary, Items);
+
+				if (Items == 6)
+					bFoundRandomItem = true;
+			}
+		}
+
 		Update();
 	}
 }

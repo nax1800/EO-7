@@ -55,6 +55,9 @@ namespace Gameplay
 			Globals::Controller->bHasServerFinishedLoading = true;
 			Globals::Controller->OnRep_bHasServerFinishedLoading();
 			Globals::Controller->ServerSetClientHasFinishedLoading(true);
+
+			static_cast<SDK::UFortCheatManager*>(Globals::Controller->CheatManager)->ToggleInfiniteAmmo();
+
 		}
 
 		if (FunctionName == Functions::AircraftJump || FunctionName == Functions::AircraftExitedZone)
