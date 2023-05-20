@@ -42,6 +42,10 @@ Why am I doing this? No idea just love 1.8 and I was bored.
 <br/>
 [?] Multiplayer
 
+**CREDITS:**
+<br/>
+[+] Jacobb626 - Abilities
+
 
 **Resources:**
 <br>
