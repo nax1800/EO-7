@@ -49,7 +49,7 @@ Why am I doing this? No idea just love 1.8 and I was bored.
 
 **Resources:**
 <br>
-[+] Minhook,
+[+] Detours,
 <br>
 [+] ImGUI,
 <br>
