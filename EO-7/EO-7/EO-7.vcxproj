@@ -154,12 +154,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Abilities.h" />
     <ClInclude Include="Framework.h" />
     <ClInclude Include="Gameplay.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="Inventory.h" />
     <ClInclude Include="Logging.h" />
+    <ClInclude Include="Loot.h" />
+    <ClInclude Include="Menu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PropertyFixup.hpp" />
     <ClInclude Include="SDK.hpp" />
@@ -173,6 +176,7 @@
     <ClCompile Include="SDK\CoreUObject_functions.cpp" />
     <ClCompile Include="SDK\Engine_functions.cpp" />
     <ClCompile Include="SDK\FortniteGame_functions.cpp" />
+    <ClCompile Include="SDK\GameplayAbilities_functions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

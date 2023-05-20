@@ -5,7 +5,7 @@ BOOL APIENTRY DllMain(HMODULE HModule, DWORD ReasonForCall, LPVOID LPReserved)
 	if (ReasonForCall == ProcessAttach)
 	{
 		Logging::Setup();
-		Initialize(); //SDK
+		Initialize();
 		Globals::Initialize();
 		Gameplay::StartPEHook();
 	}

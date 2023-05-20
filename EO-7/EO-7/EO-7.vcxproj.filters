@@ -15,6 +15,9 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="Inventory.h" />
+    <ClInclude Include="Abilities.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="Loot.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
@@ -28,6 +31,9 @@
       <Filter>SDK</Filter>
     </ClCompile>
     <ClCompile Include="SDK\FortniteGame_functions.cpp">
+      <Filter>SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="SDK\GameplayAbilities_functions.cpp">
       <Filter>SDK</Filter>
     </ClCompile>
   </ItemGroup>

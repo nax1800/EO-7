@@ -23,53 +23,57 @@ namespace Gameplay
 {
 
 	bool bMatchStarted = false;
+	bool bPressedPlay = false;
 
 	void* ProcessEventHook(SDK::UObject* Object, SDK::UFunction* Function, void* Parameters)
 	{
-		std::string FunctionName = Function->GetFullName();
+		std::string FunctionFullName = Function->GetFullName();
+		std::string FunctionName = Function->GetName();
 
-		if (FunctionName == Functions::PlayButton)
+		std::string ObjectFullName = Object->GetFullName();
+
+		if (FunctionFullName == Functions::PlayButton && !bPressedPlay)
 		{
-			Globals::Controller->SwitchLevel(L"Athena_Terrain");
+			Globals::GetController()->SwitchLevel(L"Athena_Terrain");
+			bPressedPlay = true;
 		}
 
-		if (FunctionName == Functions::StartMatch)
+		if (FunctionFullName == Functions::StartMatch && bPressedPlay && !bMatchStarted)
 		{
-			Globals::Controller = reinterpret_cast<SDK::AFortPlayerControllerAthena*>((*Globals::GWorld)->OwningGameInstance->LocalPlayers[0]->PlayerController);
-			auto PlayerState = static_cast<SDK::AFortPlayerStateAthena*>(Globals::Controller->PlayerState);
-			PlayerState->TeamIndex = SDK::EFortTeam::HumanPvP_Team1;
-			PlayerState->OnRep_TeamIndex();
-
+			SDK::InitGObjects();
 			Player::Spawn();
 
 			Inventory::Setup();
 
 			reinterpret_cast<SDK::AFortPlayerController*>((*Globals::GWorld)->OwningGameInstance->LocalPlayers[0]->PlayerController)->ServerReadyToStartMatch();
 			reinterpret_cast<SDK::AFortGameMode*>((*Globals::GWorld)->AuthorityGameMode)->StartMatch();
+
 			bMatchStarted = true;
 		}
 
-		if (FunctionName == Functions::LoadingScreenDropped && bMatchStarted)
+		if (FunctionFullName == Functions::LoadingScreenDropped && bMatchStarted)
 		{
-			Globals::Controller->bHasClientFinishedLoading = true;
-			Globals::Controller->bHasServerFinishedLoading = true;
-			Globals::Controller->OnRep_bHasServerFinishedLoading();
-			Globals::Controller->ServerSetClientHasFinishedLoading(true);
+			Globals::GetController()->bHasClientFinishedLoading = true;
+			Globals::GetController()->bHasServerFinishedLoading = true;
+			Globals::GetController()->OnRep_bHasServerFinishedLoading();
+			Globals::GetController()->ServerSetClientHasFinishedLoading(true);
 
-			static_cast<SDK::UFortCheatManager*>(Globals::Controller->CheatManager)->ToggleInfiniteAmmo();
-
+			static_cast<SDK::UFortCheatManager*>(Globals::GetController()->CheatManager)->ToggleInfiniteAmmo();
 		}
 
-		if (FunctionName == Functions::AircraftJump || FunctionName == Functions::AircraftExitedZone)
+		if (FunctionFullName == Functions::AircraftJump || FunctionName == Functions::AircraftExitedZone)
 		{
 			auto Aircraft = Helpers::FindActor(SDK::AFortAthenaAircraft::StaticClass());
-			if (Globals::Controller->IsInAircraft())
+			if (Globals::GetController()->IsInAircraft())
 			{
+				if (Globals::Pawn)
+					Globals::Pawn->K2_DestroyActor();
+
 				Player::Spawn(Aircraft->K2_GetActorLocation());
 			}
 		}
 
-		if (FunctionName == Functions::ExecuteInventoryItem)
+		if (FunctionFullName == Functions::ExecuteInventoryItem)
 		{
 			auto Params = (SDK::Params::AFortPlayerController_ServerExecuteInventoryItem_Params*)Parameters;
 			auto ItemGuid = Params->ItemGuid;
@@ -88,18 +92,24 @@ namespace Gameplay
 			}
 		}
 
-		if (FunctionName == Functions::ReceiveTick && bMatchStarted)
+		if (FunctionFullName == Functions::ReceiveTick && bMatchStarted)
 		{
-			if (GetAsyncKeyState(VK_SPACE) && 0x8000 && Globals::Pawn->CanJump() && !Globals::Pawn->IsJumpProvidingForce() && Globals::Pawn) //TEMP : Need Abilities
+			if (GetAsyncKeyState(VK_SPACE) && 0x8000 && Globals::Pawn->CanJump() && !Globals::Pawn->IsJumpProvidingForce() && !Globals::GetController()->IsInAircraft() && Globals::Pawn) //TEMP : Need Abilities
 				Globals::Pawn->Jump();
 
 			Globals::Pawn->CurrentMovementStyle = SDK::EFortMovementStyle::Sprinting;
 		}
 
-		if (FunctionName == Functions::ReturnToMainMenu && bMatchStarted)
+		if (FunctionFullName == Functions::ReturnToMainMenu && bMatchStarted)
 		{
 			bMatchStarted = false;
-			Globals::Controller->SwitchLevel(L"Frontend");
+			bPressedPlay = false;
+			Globals::GetController()->ClientTravel(L"Frontend", SDK::ETravelType::TRAVEL_Absolute, false, {});
+		}
+
+		if (FunctionFullName.contains("TryActivateAbility") || FunctionFullName.contains("AbilityRPCBatch"))
+		{
+			LogInfo(FunctionFullName);
 		}
 
 		return ProcessEvent(Object, Function, Parameters);
@@ -111,6 +121,6 @@ namespace Gameplay
 		DetourUpdateThread(GetCurrentThread());
 		DetourAttach(&(PVOID&)ProcessEvent, ProcessEventHook);
 		DetourTransactionCommit();
-		Logging::Log("Started ProcessEvent Hook.");
+		LogInfo("'ProcessEvent' Hook has started.");
 	}
 }

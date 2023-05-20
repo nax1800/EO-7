@@ -28,8 +28,8 @@ namespace Inventory
 	void Update()
 	{
 		Globals::Inventory->HandleInventoryLocalUpdate();
-		Globals::Controller->HandleWorldInventoryLocalUpdate();
-		Globals::Controller->OnRep_QuickBar();
+		Globals::GetController()->HandleWorldInventoryLocalUpdate();
+		Globals::GetController()->OnRep_QuickBar();
 		Globals::Quickbars->OnRep_PrimaryQuickBar();
 		Globals::Quickbars->OnRep_SecondaryQuickBar();
 	}
@@ -37,30 +37,19 @@ namespace Inventory
 	void Setup()
 	{
 		Globals::Quickbars = Helpers::SpawnActor<SDK::AFortQuickBars>(SDK::AFortQuickBars::StaticClass(), { 1,1,1 }, {});
-		reinterpret_cast<QuickBarsPointer*>(Globals::Controller)->QuickBars = Globals::Quickbars;
-		Globals::Quickbars->SetOwner(Globals::Controller);
+		reinterpret_cast<QuickBarsPointer*>(Globals::GetController())->QuickBars = Globals::Quickbars;
+		Globals::Quickbars->SetOwner(Globals::GetController());
 		Globals::Quickbars->EnableSlot(SDK::EFortQuickBars::Primary, 0);
-		Globals::Inventory = reinterpret_cast<InventoryPointer*>(Globals::Controller)->WorldInventory;
+		Globals::Inventory = reinterpret_cast<InventoryPointer*>(Globals::GetController())->WorldInventory;
 
 		auto Pickaxe = SDK::UObject::FindObject<SDK::UFortWeaponItemDefinition>("FortWeaponMeleeItemDefinition WID_Harvest_Pickaxe_Athena_C_T01.WID_Harvest_Pickaxe_Athena_C_T01");
 		AddItem(Pickaxe, SDK::EFortQuickBars::Primary, 0);
 
-		bool bFoundRandomItem = false;
-		int Items = 1;
-		for (int i = 0; i < SDK::UObject::GObjects->Num(); i++)
-		{
-			auto Object = SDK::UObject::GObjects->GetByIndex(i);
-
-			if (Object && Object->GetFullName().contains("FortWeaponRangedItemDefinition ") && !bFoundRandomItem)
-			{
-				Items++;
-				auto Item = static_cast<SDK::UFortWeaponItemDefinition*>(Object);
-				AddItem(Item, SDK::EFortQuickBars::Primary, Items);
-
-				if (Items == 6)
-					bFoundRandomItem = true;
-			}
-		}
+		AddItem(Loot::GetRandomWeapon(), SDK::EFortQuickBars::Primary, 1);
+		AddItem(Loot::GetRandomWeapon(), SDK::EFortQuickBars::Primary, 2);
+		AddItem(Loot::GetRandomWeapon(), SDK::EFortQuickBars::Primary, 3);
+		AddItem(Loot::GetRandomWeapon(), SDK::EFortQuickBars::Primary, 4);
+		AddItem(Loot::GetRandomWeapon(), SDK::EFortQuickBars::Primary, 5);
 
 		Update();
 	}

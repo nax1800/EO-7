@@ -33,7 +33,7 @@ namespace Offsets
 	inline int32 AppendString = 0x01337530;
 	inline int32 ProcessEvent = 0x01427390;
 	inline int32 Realloc = 0x0128C650;
-	inline int32 GWorld = 0x068799f0; //Not sure if GWorld Offset.
+	inline int32 GWorld = 0x068799f0;
 }
 
 #include "PropertyFixup.hpp"

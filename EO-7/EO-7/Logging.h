@@ -10,10 +10,7 @@ namespace Logging
 		AllocConsole();
 		FILE* pFile;
 		freopen_s(&pFile, "CONOUT$", "w", stdout);
-	}
 
-	void Log(string ToLog)
-	{
-		cout << "[EO-7]: " << ToLog << endl;
+		LogInfo("Welcome to EO-7! The best 1.8 single-player experience you'll ever enjoy.\n");
 	}
 }
