@@ -94,9 +94,9 @@ namespace SDK
 			return Data != nullptr;
 		}
 
-		inline bool IsValidIndex(int32 Index)
+		inline bool IsValidIndex(int i) const
 		{
-			return Index >= 0 && Index < NumElements;
+			return i < Num();
 		}
 
 		inline int Add(T InputData)
@@ -120,7 +120,7 @@ namespace SDK
 			}
 			this->Data = (T*)Realloc(NewArray.Data, sizeof(T) * (NewArray.NumElements), 0);
 			this->NumElements = NewArray.NumElements;
-			this->Max = NewArray.NumElements;
+			this->MaxElements = NewArray.NumElements;
 		}
 
 		inline void ResetNum()

@@ -15,7 +15,7 @@ namespace Inventory
 		SDK::AFortInventory* WorldInventory;
 	};
 
-	void AddItem(SDK::UFortWeaponItemDefinition* ItemDefinition, SDK::EFortQuickBars Quickbar, int Slot)
+	void AddItem(SDK::UFortItemDefinition* ItemDefinition, SDK::EFortQuickBars Quickbar, int Slot)
 	{
 		auto Item = ItemDefinition->CreateTemporaryItemInstanceBP(1, 0);
 		auto WorldItem = reinterpret_cast<SDK::UFortWorldItem*>(Item);
@@ -45,11 +45,19 @@ namespace Inventory
 		auto Pickaxe = SDK::UObject::FindObject<SDK::UFortWeaponItemDefinition>("FortWeaponMeleeItemDefinition WID_Harvest_Pickaxe_Athena_C_T01.WID_Harvest_Pickaxe_Athena_C_T01");
 		AddItem(Pickaxe, SDK::EFortQuickBars::Primary, 0);
 
-		AddItem(Loot::GetRandomWeapon(), SDK::EFortQuickBars::Primary, 1);
-		AddItem(Loot::GetRandomWeapon(), SDK::EFortQuickBars::Primary, 2);
-		AddItem(Loot::GetRandomWeapon(), SDK::EFortQuickBars::Primary, 3);
-		AddItem(Loot::GetRandomWeapon(), SDK::EFortQuickBars::Primary, 4);
-		AddItem(Loot::GetRandomWeapon(), SDK::EFortQuickBars::Primary, 5);
+		/*
+		auto EditTool = SDK::UObject::FindObject<SDK::UFortItemDefinition>("EditTool");
+		auto ItemData_Wall = SDK::UObject::FindObject<SDK::UFortItemDefinition>("BuildingItemData_Wall");
+		auto ItemData_Floor = SDK::UObject::FindObject<SDK::UFortItemDefinition>("BuildingItemData_Floor");
+		auto ItemData_Stair = SDK::UObject::FindObject<SDK::UFortItemDefinition>("BuildingItemData_Stair_W");
+		auto ItemData_Roof = SDK::UObject::FindObject<SDK::UFortItemDefinition>("BuildingItemData_RoofS");
+		*/
+
+		AddItem(Loot::GetRandomItem(), SDK::EFortQuickBars::Primary, 1);
+		AddItem(Loot::GetRandomItem(), SDK::EFortQuickBars::Primary, 2);
+		AddItem(Loot::GetRandomItem(), SDK::EFortQuickBars::Primary, 3);
+		AddItem(Loot::GetRandomItem(), SDK::EFortQuickBars::Primary, 4);
+		AddItem(Loot::GetRandomItem(), SDK::EFortQuickBars::Primary, 5);
 
 		Update();
 	}

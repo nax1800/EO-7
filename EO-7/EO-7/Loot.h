@@ -3,7 +3,9 @@
 
 namespace Loot
 {
-	SDK::UFortWeaponItemDefinition* GetRandomWeapon() //scuffed as fuck ngl : gives the same weapon
+	std::vector<SDK::UFortWeaponItemDefinition*> LootPool;
+
+	void SetLootPool() //scuffed as fuck ngl : gives the same weapon
 	{
 		int GObjectsNum = SDK::UObject::GObjects->Num();
 		for (int i = 0; i < GObjectsNum; i++)
@@ -21,12 +23,19 @@ namespace Loot
 
 				if (bItemHasDurability != 1 && bNeverPersisted == 1 && bCalculateRarityFromQualityAndTier != 1 && (uint8)DisplayTier == 0)
 				{
-					LogInfo(Item->GetFullName());
-					return Item;
+					LogInfo("Added '" + Item->GetFullName() + "' to Loot Pool.");
+					LootPool.push_back(Item);
 				}
 			}
 		}
+	}
 
-		return nullptr;
+	SDK::UFortWeaponItemDefinition* GetRandomItem()
+	{
+	a:
+		auto Item = LootPool[rand() % LootPool.size() + 1];
+		auto Rarity = std::to_string((int)Item->GetRarity());
+		LogInfo("Random Item is: " + Item->GetName() + " Rarity: " + Rarity);
+		return Item;
 	}
 }

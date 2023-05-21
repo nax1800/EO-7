@@ -19,5 +19,7 @@ namespace Player
 		Globals::Pawn->ServerChoosePart(SDK::EFortCustomPartType::Body, Body);
 		Globals::Pawn->ServerChoosePart(SDK::EFortCustomPartType::Head, Head);
 		PlayerState->OnRep_CharacterParts();
+
+		LogInfo("Player Spawned.");
 	}
 }

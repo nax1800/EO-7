@@ -3,6 +3,21 @@
 
 namespace Helpers
 {
+	template <typename T>
+	static T* StaticLoadObject(const TCHAR* InPath)
+	{
+		return (T*)StaticLoadObjectInternal(T::StaticClass(), nullptr, InPath, nullptr, 0, nullptr, false);
+	}
+
+	template <typename T>
+	static T* StaticFindObject(std::string ObjectName, SDK::UClass* ObjectClass = SDK::UObject::StaticClass())
+	{
+		auto OrigInName = std::wstring(ObjectName.begin(), ObjectName.end()).c_str();
+
+		auto StaticFindObject = (T * (*)(SDK::UClass*, SDK::UObject * Package, const wchar_t* OrigInName, bool ExactClass))((uintptr_t)GetModuleHandleA(0) + 0x142D2E0);
+		return StaticFindObject(ObjectClass, nullptr, OrigInName, false);
+	}
+
 	template<typename T>
 	T* SpawnActor(SDK::UClass* ActorClass, SDK::FVector Location, SDK::FRotator Rotation) {
 		SDK::FQuat Quat;

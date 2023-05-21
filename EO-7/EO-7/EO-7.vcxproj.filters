@@ -18,6 +18,7 @@
     <ClInclude Include="Abilities.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Loot.h" />
+    <ClInclude Include="Building.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />

@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <psapi.h>
 #include <format>
+#include <vector>
 #include <iostream>
 #include <Detours.h>
 

@@ -3,8 +3,6 @@
 
 namespace Abilities
 {
-	char (*InternalTryActivateAbilityLong)(SDK::UAbilitySystemComponent* AbilitySystemComp, SDK::FGameplayAbilitySpecHandle AbilityToActivate, SDK::FPredictionKey InPredictionKey, SDK::UGameplayAbility** OutInstancedAbility, void* OnGameplayAbilityEndedDelegate, const SDK::FGameplayEventData* TriggerEventData);
-
 	SDK::FGameplayAbilitySpec* FindAbilitySpecFromHandle(SDK::UAbilitySystemComponent* AbilitySystem, SDK::FGameplayAbilitySpecHandle Handle)
 	{
 		for (int i = 0; i < AbilitySystem->ActivatableAbilities.Items.Num(); i++)
@@ -24,7 +22,9 @@ namespace Abilities
 	{
 		auto AbilitySystemComponent = Globals::Pawn->AbilitySystemComponent;
 
-		static SDK::UGameplayEffect* DefaultGameplayEffect = SDK::UObject::FindObject<SDK::UGameplayEffect>("GE_Constructor_ContainmentUnit_Applied_C GE_Constructor_ContainmentUnit_Applied.Default__GE_Constructor_ContainmentUnit_Applied_C");
+		static auto DefaultGameplayEffect = SDK::UObject::FindObject<SDK::UGameplayEffect>("GE_Constructor_ContainmentUnit_Applied_C GE_Constructor_ContainmentUnit_Applied.Default__GE_Constructor_ContainmentUnit_Applied_C");
+
+		LogInfo("DefaultGameplayEffect: " + DefaultGameplayEffect->GetFullName());
 
 		if (!DefaultGameplayEffect)
 			return;
@@ -35,26 +35,32 @@ namespace Abilities
 
 		DefaultGameplayEffect->DurationPolicy = SDK::EGameplayEffectDurationType::Infinite;
 
-		static auto GameplayEffectClass = SDK::UObject::FindObject<SDK::UClass>("BlueprintGeneratedClass GE_Constructor_ContainmentUnit_Applied.GE_Constructor_ContainmentUnit_Applied_C");
-
+		static auto GameplayEffectClass = SDK::UObject::FindClass("BlueprintGeneratedClass GE_Constructor_ContainmentUnit_Applied.GE_Constructor_ContainmentUnit_Applied_C");
 		if (!GameplayEffectClass)
 			return;
 
-		AbilitySystemComponent->BP_ApplyGameplayEffectToTarget(GameplayEffectClass, AbilitySystemComponent, 1, SDK::FGameplayEffectContextHandle());
+		auto handle = SDK::FGameplayEffectContextHandle();
+
+		LogInfo("AbilitySystemComp: " + AbilitySystemComponent->GetName() + " Ability: " + GameplayAbilityClass->GetName());
+
+		AbilitySystemComponent->BP_ApplyGameplayEffectToTarget(GameplayEffectClass, AbilitySystemComponent, 1, handle);
 	}
 
 	void GrantAbilities()
 	{
-		//static auto AbilitySet = Helpers::StaticFindObject<SDK::UFortAbilitySet>("/Game/Abilities/Player/Generic/Traits/DefaultPlayer/GAS_DefaultPlayer.GAS_DefaultPlayer");
+		LogInfo("Granting Abilities.");
+		static auto AbilitySet = Helpers::StaticFindObject<SDK::UFortAbilitySet>("/Game/Abilities/Player/Generic/Traits/DefaultPlayer/GAS_DefaultPlayer.GAS_DefaultPlayer");
 
-		/*for (int i = 0; i < AbilitySet->GameplayAbilities.Num(); i++)
+		LogInfo("AbilitySet: " + AbilitySet->GetName());
+
+		for (int i = 0; i < AbilitySet->GameplayAbilities.Num(); i++)
 		{
 			auto Ability = AbilitySet->GameplayAbilities[i];
 
 			GrantAbility(Ability);
 		}
 
-		static auto ShootingAbility = Helpers::StaticFindObject<SDK::UClass>("/Game/Abilities/Weapons/Ranged/GA_Ranged_GenericDamage.GA_Ranged_GenericDamage_C");
+		/*static auto ShootingAbility = Helpers::StaticFindObject<SDK::UClass>("/Game/Abilities/Weapons/Ranged/GA_Ranged_GenericDamage.GA_Ranged_GenericDamage_C");
 		if (ShootingAbility)
 		{
 			GrantAbility(ShootingAbility);

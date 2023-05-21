@@ -155,6 +155,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Abilities.h" />
+    <ClInclude Include="Building.h" />
     <ClInclude Include="Framework.h" />
     <ClInclude Include="Gameplay.h" />
     <ClInclude Include="Globals.h" />

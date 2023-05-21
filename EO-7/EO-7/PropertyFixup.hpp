@@ -17,3 +17,4 @@ class UDelegateProperty_
 	unsigned __int8 Pad[0x10];
 };
 
+

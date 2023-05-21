@@ -23,9 +23,10 @@ typedef unsigned __int16 uint16;
 typedef unsigned __int32 uint32;
 typedef unsigned __int64 uint64;
 
-inline void* (*ProcessEvent)(void*, void*, void*);
+inline void* (*ProcessEvent)(void* Object, void* Function, void* Parameters);
 inline void* (*Realloc)(void* Memory, int64_t NewSize, uint32_t Alignment);
-
+inline void* (*CollectGarbageInternal)(uint32_t KeepFlags, bool bPerformFullPurge);
+inline void* (*StaticLoadObjectInternal)(void* InClass, void* InOuter, const TCHAR* Name, const TCHAR* FileName, uint32_t LoadFlags, void* Sandbox, bool bAllowObjectReconciliation);
 
 namespace Offsets
 {
@@ -34,6 +35,8 @@ namespace Offsets
 	inline int32 ProcessEvent = 0x01427390;
 	inline int32 Realloc = 0x0128C650;
 	inline int32 GWorld = 0x068799f0;
+	inline int32 CollectGarbage = 0x013cc730;
+	inline int32 LoadObject = 0x0142EE30;
 }
 
 #include "PropertyFixup.hpp"
@@ -5089,4 +5092,6 @@ inline void Initialize()
 	SDK::UObject::GObjects = reinterpret_cast<SDK::TUObjectArray*>((uintptr_t)GetModuleHandle(0) + Offsets::GObjects);
 	ProcessEvent = decltype(ProcessEvent)((uintptr_t)GetModuleHandle(0) + Offsets::ProcessEvent);
 	Realloc = decltype(Realloc)((uintptr_t)GetModuleHandle(0) + Offsets::Realloc);
+	StaticLoadObjectInternal = decltype(StaticLoadObjectInternal)((uintptr_t)GetModuleHandle(0) + Offsets::LoadObject);
+	CollectGarbageInternal = decltype(CollectGarbageInternal)((uintptr_t)GetModuleHandle(0) + Offsets::CollectGarbage);
 }
