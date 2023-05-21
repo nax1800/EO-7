@@ -34,7 +34,7 @@ Why am I doing this? No idea just love 1.8 and I was bored.
 
 **TODO:**
 <br/>
-[+] Clean Code (100%),
+[+] Clean Code (Make code readable),
 <br/>
 [+] In-Game Menu,
 <br/>
@@ -42,10 +42,14 @@ Why am I doing this? No idea just love 1.8 and I was bored.
 <br/>
 [?] Multiplayer
 
+**CREDITS:**
+<br/>
+[+] Jacobb626 - Abilities
+
 
 **Resources:**
 <br>
-[+] Minhook,
+[+] Detours,
 <br>
 [+] ImGUI,
 <br>
